@@ -1,12 +1,6 @@
 import { randomUUID } from 'crypto';
 import { db } from './client';
-import type {
-  Task,
-  CreateTaskInput,
-  UpdateTaskInput,
-  TaskStatus,
-  TaskPriority,
-} from '../types';
+import type { Task, CreateTaskInput, UpdateTaskInput, TaskStatus } from '../types';
 
 export interface TaskFilters {
   status?: TaskStatus;
@@ -14,41 +8,35 @@ export interface TaskFilters {
   sortDir?: 'asc' | 'desc';
 }
 
-const PRIORITY_ORDER: Record<TaskPriority, number> = {
-  high: 0,
-  medium: 1,
-  low: 2,
-};
-
-const TASKS_WITH_COUNT = `
-  SELECT t.*, COUNT(s.id) AS subtaskCount
-  FROM tasks t
-  LEFT JOIN subtasks s ON s.parentTaskId = t.id
-  GROUP BY t.id
-`;
+const PRIORITY_CASE = `CASE t.priority WHEN 'high' THEN 0 WHEN 'medium' THEN 1 WHEN 'low' THEN 2 END`;
 
 export function listTasks(filters: TaskFilters = {}): Task[] {
-  const rows = db.prepare(TASKS_WITH_COUNT).all() as Task[];
+  const { status, sortBy = 'createdAt', sortDir = 'desc' } = filters;
+  const dir = sortDir === 'asc' ? 'ASC' : 'DESC';
+  const orderBy = sortBy === 'priority' ? `${PRIORITY_CASE} ${dir}` : `t.createdAt ${dir}`;
 
-  const filtered = filters.status
-    ? rows.filter((t) => t.status === filters.status)
-    : rows;
+  const query = `
+    SELECT t.*, COUNT(s.id) AS subtaskCount
+    FROM tasks t
+    LEFT JOIN subtasks s ON s.parentTaskId = t.id
+    ${status ? 'WHERE t.status = ?' : ''}
+    GROUP BY t.id
+    ORDER BY ${orderBy}
+  `;
 
-  const sortBy = filters.sortBy ?? 'createdAt';
-  const dir = filters.sortDir === 'asc' ? 1 : -1;
-
-  return filtered.sort((a, b) => {
-    if (sortBy === 'priority') {
-      return (PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]) * dir;
-    }
-    return (a.createdAt < b.createdAt ? -1 : 1) * dir;
-  });
+  return db.prepare(query).all(...(status ? [status] : [])) as Task[];
 }
 
 export function getTask(id: string): Task | undefined {
-  return db.prepare(`${TASKS_WITH_COUNT} HAVING t.id = ?`).get(id) as
-    | Task
-    | undefined;
+  return db
+    .prepare(
+      `SELECT t.*, COUNT(s.id) AS subtaskCount
+       FROM tasks t
+       LEFT JOIN subtasks s ON s.parentTaskId = t.id
+       WHERE t.id = ?
+       GROUP BY t.id`,
+    )
+    .get(id) as Task | undefined;
 }
 
 export function createTask(input: CreateTaskInput): Task {
