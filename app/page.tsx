@@ -8,11 +8,13 @@ import { TaskForm } from '@/components/TaskForm';
 import { Filters } from '@/components/Filters';
 import { DecomposeModal } from '@/components/DecomposeModal';
 import { PrioritizePanel } from '@/components/PrioritizePanel';
+import { StatusUpdateModal } from '@/components/StatusUpdateModal';
 
 type Modal =
   | { kind: 'create' }
   | { kind: 'edit'; task: Task }
   | { kind: 'decompose'; task: Task }
+  | { kind: 'status-update'; task: Task }
   | { kind: 'prioritize' }
   | null;
 
@@ -148,6 +150,7 @@ export default function HomePage() {
                 onEdit={(t) => setModal({ kind: 'edit', task: t })}
                 onDelete={handleDelete}
                 onDecompose={(t) => setModal({ kind: 'decompose', task: t })}
+                onStatusUpdate={(t) => setModal({ kind: 'status-update', task: t })}
               />
             ))}
           </div>
@@ -174,6 +177,10 @@ export default function HomePage() {
             fetchTasks();
           }}
         />
+      )}
+
+      {modal?.kind === 'status-update' && (
+        <StatusUpdateModal task={modal.task} onClose={() => setModal(null)} />
       )}
 
       {modal?.kind === 'prioritize' && (

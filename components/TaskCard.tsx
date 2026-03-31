@@ -8,9 +8,10 @@ interface Props {
   onEdit: (task: Task) => void;
   onDelete: (id: string) => void;
   onDecompose: (task: Task) => void;
+  onStatusUpdate: (task: Task) => void;
 }
 
-export function TaskCard({ task, onEdit, onDelete, onDecompose }: Props) {
+export function TaskCard({ task, onEdit, onDelete, onDecompose, onStatusUpdate }: Props) {
   const createdDate = new Date(task.createdAt).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -37,6 +38,13 @@ export function TaskCard({ task, onEdit, onDelete, onDecompose }: Props) {
             title='Decompose with AI'
           >
             ✦ AI
+          </button>
+          <button
+            onClick={() => onStatusUpdate(task)}
+            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+            title='Generate status update'
+          >
+            ⊹ Update
           </button>
           <button
             onClick={() => onEdit(task)}
