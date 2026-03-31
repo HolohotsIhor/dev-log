@@ -14,8 +14,8 @@ type State =
   | { kind: 'result'; update: string }
   | { kind: 'error'; message: string };
 
-const btnGhost = 'rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100';
-const btnPrimary = 'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700';
+const btnGhost = 'cursor-pointer rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100';
+const btnPrimary = 'cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700';
 
 export function StatusUpdateModal({ task, onClose }: Props) {
   const [state, setState] = useState<State>({ kind: 'idle' });

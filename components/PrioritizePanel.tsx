@@ -13,6 +13,9 @@ interface Props {
   onClose: () => void;
 }
 
+const btnPrimary =
+  'cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700';
+
 export function PrioritizePanel({ onClose }: Props) {
   const [state, setState] = useState<
     | { kind: 'idle' }
@@ -73,7 +76,7 @@ export function PrioritizePanel({ onClose }: Props) {
               </button>
               <button
                 onClick={run}
-                className='cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700'
+                className={btnPrimary}
               >
                 Generate plan
               </button>
@@ -81,7 +84,6 @@ export function PrioritizePanel({ onClose }: Props) {
           </div>
         )}
 
-        {/* Loading */}
         {state.kind === 'loading' && (
           <div className='flex items-center gap-3 py-4 text-sm text-slate-500'>
             <span className='inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent' />
@@ -89,7 +91,6 @@ export function PrioritizePanel({ onClose }: Props) {
           </div>
         )}
 
-        {/* Result */}
         {state.kind === 'result' && (
           <div className='space-y-4'>
             <div className='rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-800'>
@@ -125,7 +126,7 @@ export function PrioritizePanel({ onClose }: Props) {
             <div className='flex justify-end'>
               <button
                 onClick={onClose}
-                className='rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200'
+                className='cursor-pointer rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200'
               >
                 Done
               </button>
@@ -133,7 +134,6 @@ export function PrioritizePanel({ onClose }: Props) {
           </div>
         )}
 
-        {/* Error */}
         {state.kind === 'error' && (
           <div className='space-y-4'>
             <p className='rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600'>
@@ -148,7 +148,7 @@ export function PrioritizePanel({ onClose }: Props) {
               </button>
               <button
                 onClick={() => setState({ kind: 'idle' })}
-                className='rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700'
+                className={btnPrimary}
               >
                 Retry
               </button>
