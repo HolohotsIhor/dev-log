@@ -134,7 +134,7 @@ export default function HomePage() {
             <p className='text-slate-400'>No tasks yet.</p>
             <button
               onClick={() => setModal({ kind: 'create' })}
-              className='mt-3 text-sm text-blue-600 hover:underline'
+              className='cursor-pointer mt-3 text-sm text-blue-600 hover:underline'
             >
               Create your first task
             </button>
