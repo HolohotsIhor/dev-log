@@ -16,6 +16,11 @@ type Step =
   | { kind: 'saved'; subtasks: string[] }
   | { kind: 'error'; message: string };
 
+const btnGhost =
+  'rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100';
+const btnPrimary =
+  'rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700';
+
 export function DecomposeModal({ task, onClose }: Props) {
   const [step, setStep] = useState<Step>({ kind: 'idle' });
   const [answers, setAnswers] = useState<string[]>([]);
@@ -42,7 +47,10 @@ export function DecomposeModal({ task, onClose }: Props) {
         setStep({ kind: 'result', subtasks: data.subtasks });
       }
     } catch (err) {
-      setStep({ kind: 'error', message: err instanceof Error ? err.message : 'Unknown error' });
+      setStep({
+        kind: 'error',
+        message: err instanceof Error ? err.message : 'Unknown error',
+      });
     }
   }
 
@@ -60,7 +68,10 @@ export function DecomposeModal({ task, onClose }: Props) {
 
       setStep({ kind: 'saved', subtasks });
     } catch (err) {
-      setStep({ kind: 'error', message: err instanceof Error ? err.message : 'Unknown error' });
+      setStep({
+        kind: 'error',
+        message: err instanceof Error ? err.message : 'Unknown error',
+      });
     }
   }
 
@@ -70,32 +81,34 @@ export function DecomposeModal({ task, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4'
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="flex w-full max-w-lg flex-col gap-5 rounded-2xl bg-white p-6 shadow-xl">
+      <div className='flex w-full max-w-lg flex-col gap-5 rounded-2xl bg-white p-6 shadow-xl'>
         <div>
-          <div className="flex items-center gap-2">
-            <span className="text-base">✦</span>
-            <h2 className="text-lg font-semibold text-slate-800">AI Decompose</h2>
+          <div className='flex items-center gap-2'>
+            <span className='text-base'>✦</span>
+            <h2 className='text-lg font-semibold text-slate-800'>
+              AI Decompose
+            </h2>
           </div>
-          <p className="mt-1 line-clamp-1 text-sm text-slate-500">{task.title}</p>
+          <p className='mt-1 line-clamp-1 text-sm text-slate-500'>
+            {task.title}
+          </p>
         </div>
 
         {step.kind === 'idle' && (
-          <div className="space-y-3">
-            <p className="text-sm text-slate-600">
-              The agent will analyze this task and generate a structured list of subtasks.
-              If the description is ambiguous, it will ask clarifying questions first.
+          <div className='space-y-3'>
+            <p className='text-sm text-slate-600'>
+              The agent will analyze this task and generate a structured list of
+              subtasks. If the description is ambiguous, it will ask clarifying
+              questions first.
             </p>
-            <div className="flex justify-end gap-2">
-              <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100">
+            <div className='flex justify-end gap-2'>
+              <button onClick={onClose} className={btnGhost}>
                 Cancel
               </button>
-              <button
-                onClick={() => callDecompose()}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              >
+              <button onClick={() => callDecompose()} className={btnPrimary}>
                 Decompose
               </button>
             </div>
@@ -103,38 +116,38 @@ export function DecomposeModal({ task, onClose }: Props) {
         )}
 
         {step.kind === 'loading' && (
-          <div className="flex items-center gap-3 py-4 text-sm text-slate-500">
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent" />
+          <div className='flex items-center gap-3 py-4 text-sm text-slate-500'>
+            <span className='inline-block h-4 w-4 animate-spin rounded-full border-2 border-blue-400 border-t-transparent' />
             Thinking…
           </div>
         )}
 
         {step.kind === 'clarifying' && (
-          <div className="space-y-4">
-            <p className="text-sm text-slate-600">
+          <div className='space-y-4'>
+            <p className='text-sm text-slate-600'>
               The task needs a bit more context. Please answer these questions:
             </p>
             {step.questions.map((q, i) => (
               <div key={i}>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
+                <label className='mb-1 block text-sm font-medium text-slate-700'>
                   {i + 1}. {q}
                 </label>
                 <input
                   value={answers[i] ?? ''}
                   onChange={(e) => handleAnswerChange(i, e.target.value)}
-                  placeholder="Your answer…"
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  placeholder='Your answer…'
+                  className='w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
                 />
               </div>
             ))}
-            <div className="flex justify-end gap-2">
-              <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100">
+            <div className='flex justify-end gap-2'>
+              <button onClick={onClose} className={btnGhost}>
                 Cancel
               </button>
               <button
                 onClick={() => callDecompose({ answers })}
                 disabled={answers.some((a) => !a.trim())}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                className={`${btnPrimary} disabled:opacity-50`}
               >
                 Generate subtasks
               </button>
@@ -143,22 +156,30 @@ export function DecomposeModal({ task, onClose }: Props) {
         )}
 
         {step.kind === 'result' && (
-          <div className="space-y-4">
-            <ul className="space-y-2">
+          <div className='space-y-4'>
+            <ul className='space-y-2'>
               {step.subtasks.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700">
-                  <span className="mt-0.5 shrink-0 text-slate-400">{i + 1}.</span>
+                <li
+                  key={i}
+                  className='flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-700'
+                >
+                  <span className='mt-0.5 shrink-0 text-slate-400'>
+                    {i + 1}.
+                  </span>
                   {s}
                 </li>
               ))}
             </ul>
-            <div className="flex justify-end gap-2">
-              <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100">
+            <div className='flex justify-end gap-2'>
+              <button
+                onClick={onClose}
+                className='rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100'
+              >
                 Discard
               </button>
               <button
                 onClick={() => saveSubtasks(step.subtasks)}
-                className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+                className='rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700'
               >
                 Save subtasks
               </button>
@@ -167,21 +188,27 @@ export function DecomposeModal({ task, onClose }: Props) {
         )}
 
         {step.kind === 'saved' && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+          <div className='space-y-4'>
+            <div className='flex items-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-700'>
               <span>✓</span>
               {step.subtasks.length} subtasks saved
             </div>
-            <ul className="space-y-1.5">
+            <ul className='space-y-1.5'>
               {step.subtasks.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                  <span className="shrink-0 text-slate-400">{i + 1}.</span>
+                <li
+                  key={i}
+                  className='flex items-start gap-2 text-sm text-slate-600'
+                >
+                  <span className='shrink-0 text-slate-400'>{i + 1}.</span>
                   {s}
                 </li>
               ))}
             </ul>
-            <div className="flex justify-end">
-              <button onClick={onClose} className="rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200">
+            <div className='flex justify-end'>
+              <button
+                onClick={onClose}
+                className='rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200'
+              >
                 Done
               </button>
             </div>
@@ -189,15 +216,17 @@ export function DecomposeModal({ task, onClose }: Props) {
         )}
 
         {step.kind === 'error' && (
-          <div className="space-y-4">
-            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">{step.message}</p>
-            <div className="flex justify-end gap-2">
-              <button onClick={onClose} className="rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100">
+          <div className='space-y-4'>
+            <p className='rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600'>
+              {step.message}
+            </p>
+            <div className='flex justify-end gap-2'>
+              <button onClick={onClose} className={btnGhost}>
                 Close
               </button>
               <button
                 onClick={() => setStep({ kind: 'idle' })}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                className={btnPrimary}
               >
                 Retry
               </button>

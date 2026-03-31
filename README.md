@@ -16,42 +16,29 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Architecture
 
-```
-app/
-  page.tsx                 — single-page client: task list, all modals, state
-  api/
-    tasks/route.ts         — GET (list + filter/sort), POST (create)
-    tasks/[id]/route.ts    — GET, PATCH, DELETE
-    ai/decompose/route.ts  — POST: multi-step decomposition agent
-    ai/prioritize/route.ts — POST: scoring + LLM plan-of-day agent
+Four layers, each knowing only about the one below:
 
-lib/
-  types.ts                 — domain types (Task, Subtask, enums)
-  validation.ts            — Zod schemas for all API inputs
-  apiClient.ts             — typed fetch wrapper for the frontend
-  db/
-    client.ts              — better-sqlite3 singleton (HMR-safe via global)
-    migrate.ts             — DDL: CREATE TABLE tasks + subtasks
-    taskRepo.ts            — CRUD + filtering/sorting
-    subtaskRepo.ts         — list, create, bulk-create, update status
-  ai/
-    llmClient.ts           — LLMClient interface + OpenAI / Anthropic / Mock factories
-    decomposeAgent.ts      — decomposition agent (see below)
-    prioritizeAgent.ts     — prioritization agent (see below)
-
-components/
-  Badge.tsx                — StatusBadge, PriorityBadge
-  TaskCard.tsx             — task card with hover actions
-  TaskForm.tsx             — create / edit modal
-  Filters.tsx              — status filter + sort controls
-  DecomposeModal.tsx       — AI decompose UI (5 states)
-  PrioritizePanel.tsx      — AI prioritize UI (4 states)
 ```
+components / app/page.tsx   — UI, React state
+app/api/                    — HTTP layer: parse request, call lib, return JSON
+lib/ai/                     — agent logic (LLM calls, multi-step flows)
+lib/db/                     — data access (SQLite repositories)
+```
+
+API endpoints:
+- `GET/POST /api/tasks` — list with filter/sort, create
+- `GET/PATCH/DELETE /api/tasks/:id` — single task
+- `POST /api/ai/decompose` — decomposition agent
+- `POST /api/ai/prioritize` — prioritization agent
+
+**Architecture decision: monolith**
+
+A deliberate choice for this scope. A single Next.js app covers both frontend and backend — one repo, one `npm install && npm run dev`, zero infrastructure. Splitting into a separate API service would add deployment complexity with no real benefit for a single-user local tool.
 
 **Tech choices:**
-- **Next.js App Router** with Route Handlers — one repo, one `npm run dev`, no separate backend process
+- **Next.js App Router** with Route Handlers — API routes live alongside the UI, no separate backend process
 - **better-sqlite3** — file-based persistence, zero config, works offline; no ORM to keep queries explicit
-- **Zod** — schema validation at API boundary only, not spread through the codebase
+- **Zod** — schema validation at the API boundary only, not spread through the codebase
 - No RTK Query / Redux — plain `fetch` + React state is sufficient for this scope
 
 ## Data storage

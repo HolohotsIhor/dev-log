@@ -3,7 +3,6 @@ import path from 'path';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'devlog.db');
 
-// Singleton: one connection per Node.js process (Next.js dev HMR safe via global)
 declare global {
   // eslint-disable-next-line no-var
   var __db: Database.Database | undefined;

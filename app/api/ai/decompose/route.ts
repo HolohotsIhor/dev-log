@@ -8,7 +8,6 @@ runMigrations();
 const requestSchema = z.object({
   taskId: z.string().min(1),
   answers: z.array(z.string()).optional(),
-  // When provided with save:true, skip the agent and persist these directly
   subtasks: z.array(z.string()).optional(),
   save: z.boolean().optional().default(false),
 });
@@ -23,7 +22,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
 
-    // Fast path: caller already has subtasks and just wants to save them
     if (save && subtasks?.length) {
       const created = bulkCreateSubtasks(taskId, subtasks);
       return NextResponse.json({ type: 'subtasks', subtasks, saved: created });

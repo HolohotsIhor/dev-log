@@ -43,7 +43,12 @@ function createAnthropicClient(apiKey: string, model: string): LLMClient {
           'x-api-key': apiKey,
           'anthropic-version': '2023-06-01',
         },
-        body: JSON.stringify({ model, max_tokens: 1024, system, messages: userMessages }),
+        body: JSON.stringify({
+          model,
+          max_tokens: 1024,
+          system,
+          messages: userMessages,
+        }),
       });
 
       if (!res.ok) {
@@ -53,18 +58,19 @@ function createAnthropicClient(apiKey: string, model: string): LLMClient {
 
       const data = await res.json();
       const text = data?.content?.[0]?.text;
-      if (!text) throw new Error(`Anthropic returned empty content (model: ${model})`);
+      if (!text)
+        throw new Error(`Anthropic returned empty content (model: ${model})`);
       return text as string;
     },
   };
 }
 
-// Deterministic mock — returns fixture responses without any API calls.
 // Controlled by LLM_MOCK=true in .env.local.
 function createMockClient(): LLMClient {
   return {
     async complete(messages) {
-      const lastUser = messages.findLast((m) => m.role === 'user')?.content ?? '';
+      const lastUser =
+        messages.findLast((m) => m.role === 'user')?.content ?? '';
 
       if (lastUser.includes('CLARIFICATION_CHECK')) {
         return JSON.stringify({ needsClarification: false, questions: [] });
@@ -103,7 +109,10 @@ export function getLLMClient(): LLMClient {
   const apiKey = process.env.LLM_API_KEY ?? '';
   const model = process.env.LLM_MODEL ?? 'gpt-4o';
 
-  if (!apiKey) throw new Error('LLM_API_KEY is not set. Set LLM_MOCK=true to use mock mode.');
+  if (!apiKey)
+    throw new Error(
+      'LLM_API_KEY is not set. Set LLM_MOCK=true to use mock mode.',
+    );
 
   if (provider === 'anthropic') return createAnthropicClient(apiKey, model);
   return createOpenAIClient(apiKey, model);

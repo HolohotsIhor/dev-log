@@ -20,5 +20,8 @@ export interface Subtask {
   createdAt: string;
 }
 
-export type CreateTaskInput = Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'subtaskCount'>;
+export type CreateTaskInput = Omit<
+  Task,
+  'id' | 'createdAt' | 'updatedAt' | 'subtaskCount'
+>;
 export type UpdateTaskInput = Partial<CreateTaskInput>;

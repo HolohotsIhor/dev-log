@@ -10,7 +10,11 @@ export interface PrioritizeResult {
 // Scoring weights: priority (main signal) + age in days (prevents starvation, capped at 30)
 // + in-progress bonus (avoid unnecessary context switching).
 // "done" tasks are excluded entirely.
-const PRIORITY_WEIGHT: Record<TaskPriority, number> = { high: 30, medium: 20, low: 10 };
+const PRIORITY_WEIGHT: Record<TaskPriority, number> = {
+  high: 30,
+  medium: 20,
+  low: 10,
+};
 
 function ageInDays(createdAt: string): number {
   const ms = Date.now() - new Date(createdAt).getTime();
@@ -74,11 +78,14 @@ Review this order and return your recommended sequence with reasoning.`,
 
   try {
     const parsed = parseJSON<{ orderedIds: string[]; reasoning: string }>(raw);
-    if (Array.isArray(parsed.orderedIds) && typeof parsed.reasoning === 'string') {
+    if (
+      Array.isArray(parsed.orderedIds) &&
+      typeof parsed.reasoning === 'string'
+    ) {
       return parsed;
     }
   } catch {
-    // fall through to default
+    // TODO: handle error
   }
 
   return {
@@ -87,7 +94,9 @@ Review this order and return your recommended sequence with reasoning.`,
   };
 }
 
-export async function runPrioritizeAgent(tasks: Task[]): Promise<PrioritizeResult> {
+export async function runPrioritizeAgent(
+  tasks: Task[],
+): Promise<PrioritizeResult> {
   const activeTasks = tasks.filter((t) => t.status !== 'done');
 
   if (activeTasks.length === 0) {

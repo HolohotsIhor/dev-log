@@ -18,7 +18,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const body = await req.json();
     const input = updateTaskSchema.parse(body);
     const task = updateTask(id, input);
-    if (!task) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+    if (!task)
+      return NextResponse.json({ error: 'Not found' }, { status: 404 });
     return NextResponse.json(task);
   } catch (err) {
     if (err instanceof ZodError) {
@@ -31,6 +32,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 export async function DELETE(_req: NextRequest, { params }: Params) {
   const { id } = await params;
   const deleted = deleteTask(id);
-  if (!deleted) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  if (!deleted)
+    return NextResponse.json({ error: 'Not found' }, { status: 404 });
   return new NextResponse(null, { status: 204 });
 }

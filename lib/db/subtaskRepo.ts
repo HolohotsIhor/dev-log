@@ -4,7 +4,9 @@ import type { Subtask, TaskStatus } from '../types';
 
 export function listSubtasks(parentTaskId: string): Subtask[] {
   return db
-    .prepare('SELECT * FROM subtasks WHERE parentTaskId = ? ORDER BY createdAt ASC')
+    .prepare(
+      'SELECT * FROM subtasks WHERE parentTaskId = ? ORDER BY createdAt ASC',
+    )
     .all(parentTaskId) as Subtask[];
 }
 
@@ -17,16 +19,20 @@ export function createSubtask(parentTaskId: string, title: string): Subtask {
     createdAt: new Date().toISOString(),
   };
 
-  db.prepare(`
+  db.prepare(
+    `
     INSERT INTO subtasks (id, parentTaskId, title, status, createdAt)
     VALUES (@id, @parentTaskId, @title, @status, @createdAt)
-  `).run(subtask);
+  `,
+  ).run(subtask);
 
   return subtask;
 }
 
 export function updateSubtaskStatus(id: string, status: TaskStatus): boolean {
-  const result = db.prepare('UPDATE subtasks SET status = ? WHERE id = ?').run(status, id);
+  const result = db
+    .prepare('UPDATE subtasks SET status = ? WHERE id = ?')
+    .run(status, id);
   return result.changes > 0;
 }
 
@@ -35,7 +41,10 @@ export function deleteSubtask(id: string): boolean {
   return result.changes > 0;
 }
 
-export function bulkCreateSubtasks(parentTaskId: string, titles: string[]): Subtask[] {
+export function bulkCreateSubtasks(
+  parentTaskId: string,
+  titles: string[],
+): Subtask[] {
   const insert = db.prepare(`
     INSERT INTO subtasks (id, parentTaskId, title, status, createdAt)
     VALUES (@id, @parentTaskId, @title, @status, @createdAt)

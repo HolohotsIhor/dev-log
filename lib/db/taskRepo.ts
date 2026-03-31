@@ -1,6 +1,12 @@
 import { randomUUID } from 'crypto';
 import { db } from './client';
-import type { Task, CreateTaskInput, UpdateTaskInput, TaskStatus, TaskPriority } from '../types';
+import type {
+  Task,
+  CreateTaskInput,
+  UpdateTaskInput,
+  TaskStatus,
+  TaskPriority,
+} from '../types';
 
 export interface TaskFilters {
   status?: TaskStatus;
@@ -8,7 +14,11 @@ export interface TaskFilters {
   sortDir?: 'asc' | 'desc';
 }
 
-const PRIORITY_ORDER: Record<TaskPriority, number> = { high: 0, medium: 1, low: 2 };
+const PRIORITY_ORDER: Record<TaskPriority, number> = {
+  high: 0,
+  medium: 1,
+  low: 2,
+};
 
 const TASKS_WITH_COUNT = `
   SELECT t.*, COUNT(s.id) AS subtaskCount
@@ -36,33 +46,46 @@ export function listTasks(filters: TaskFilters = {}): Task[] {
 }
 
 export function getTask(id: string): Task | undefined {
-  return db.prepare(`${TASKS_WITH_COUNT} HAVING t.id = ?`).get(id) as Task | undefined;
+  return db.prepare(`${TASKS_WITH_COUNT} HAVING t.id = ?`).get(id) as
+    | Task
+    | undefined;
 }
 
 export function createTask(input: CreateTaskInput): Task {
   const now = new Date().toISOString();
   const id = randomUUID();
 
-  db.prepare(`
+  db.prepare(
+    `
     INSERT INTO tasks (id, title, description, status, priority, createdAt, updatedAt)
     VALUES (@id, @title, @description, @status, @priority, @createdAt, @updatedAt)
-  `).run({ id, ...input, createdAt: now, updatedAt: now });
+  `,
+  ).run({ id, ...input, createdAt: now, updatedAt: now });
 
   return getTask(id)!;
 }
 
-export function updateTask(id: string, input: UpdateTaskInput): Task | undefined {
+export function updateTask(
+  id: string,
+  input: UpdateTaskInput,
+): Task | undefined {
   const existing = getTask(id);
   if (!existing) return undefined;
 
-  const updated = { ...existing, ...input, updatedAt: new Date().toISOString() };
+  const updated = {
+    ...existing,
+    ...input,
+    updatedAt: new Date().toISOString(),
+  };
 
-  db.prepare(`
+  db.prepare(
+    `
     UPDATE tasks
     SET title = @title, description = @description, status = @status,
         priority = @priority, updatedAt = @updatedAt
     WHERE id = @id
-  `).run(updated);
+  `,
+  ).run(updated);
 
   return getTask(id);
 }

@@ -17,47 +17,52 @@ export function TaskCard({ task, onEdit, onDelete, onDecompose }: Props) {
   });
 
   return (
-    <div className="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <h3 className="truncate font-semibold text-slate-800">{task.title}</h3>
+    <div className='group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md'>
+      <div className='flex items-start justify-between gap-3'>
+        <div className='min-w-0 flex-1'>
+          <h3 className='truncate font-semibold text-slate-800'>
+            {task.title}
+          </h3>
           {task.description && (
-            <p className="mt-1 line-clamp-2 text-sm text-slate-500">{task.description}</p>
+            <p className='mt-1 line-clamp-2 text-sm text-slate-500'>
+              {task.description}
+            </p>
           )}
         </div>
 
-        <div className="flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+        <div className='flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100'>
           <button
             onClick={() => onDecompose(task)}
-            className="rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-            title="Decompose with AI"
+            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+            title='Decompose with AI'
           >
             ✦ AI
           </button>
           <button
             onClick={() => onEdit(task)}
-            className="rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700'
           >
             Edit
           </button>
           <button
             onClick={() => onDelete(task.id)}
-            className="rounded-lg px-2 py-1 text-xs text-red-400 hover:bg-red-50 hover:text-red-600"
+            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-red-400 hover:bg-red-50 hover:text-red-600'
           >
             Delete
           </button>
         </div>
       </div>
 
-      <div className="mt-3 flex items-center gap-2">
+      <div className='mt-3 flex items-center gap-2'>
         <StatusBadge status={task.status} />
         <PriorityBadge priority={task.priority} />
         {task.subtaskCount > 0 && (
-          <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-500">
-            {task.subtaskCount} {task.subtaskCount === 1 ? 'subtask' : 'subtasks'}
+          <span className='inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-500'>
+            {task.subtaskCount}{' '}
+            {task.subtaskCount === 1 ? 'subtask' : 'subtasks'}
           </span>
         )}
-        <span className="ml-auto text-xs text-slate-400">{createdDate}</span>
+        <span className='ml-auto text-xs text-slate-400'>{createdDate}</span>
       </div>
     </div>
   );

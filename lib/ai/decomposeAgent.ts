@@ -48,7 +48,10 @@ Task description: "${task.description || '(no description provided)'}"`,
   }
 }
 
-async function generateSubtasks(task: Task, answers?: string[]): Promise<string[]> {
+async function generateSubtasks(
+  task: Task,
+  answers?: string[],
+): Promise<string[]> {
   const llm = getLLMClient();
 
   const answersSection = answers?.length
@@ -85,7 +88,7 @@ Status: ${task.status}${answersSection}`,
     const parsed = parseJSON<{ subtasks: string[] }>(raw);
     if (Array.isArray(parsed.subtasks)) return parsed.subtasks;
   } catch {
-    // fall through
+    // TODO: handle error
   }
 
   throw new Error('Failed to parse subtasks from LLM response');

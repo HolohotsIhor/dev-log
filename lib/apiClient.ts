@@ -1,4 +1,9 @@
-import type { Task, CreateTaskInput, UpdateTaskInput, TaskStatus } from './types';
+import type {
+  Task,
+  CreateTaskInput,
+  UpdateTaskInput,
+  TaskStatus,
+} from './types';
 
 export interface TaskFiltersQuery {
   status?: TaskStatus;
@@ -37,11 +42,17 @@ export const api = {
     },
 
     create(input: CreateTaskInput): Promise<Task> {
-      return request('/api/tasks', { method: 'POST', body: JSON.stringify(input) });
+      return request('/api/tasks', {
+        method: 'POST',
+        body: JSON.stringify(input),
+      });
     },
 
     update(id: string, input: UpdateTaskInput): Promise<Task> {
-      return request(`/api/tasks/${id}`, { method: 'PATCH', body: JSON.stringify(input) });
+      return request(`/api/tasks/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(input),
+      });
     },
 
     delete(id: string): Promise<void> {

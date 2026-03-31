@@ -18,7 +18,10 @@ type Modal =
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filters, setFilters] = useState<TaskFiltersQuery>({ sortBy: 'createdAt', sortDir: 'desc' });
+  const [filters, setFilters] = useState<TaskFiltersQuery>({
+    sortBy: 'createdAt',
+    sortDir: 'desc',
+  });
   const [modal, setModal] = useState<Modal>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,14 +38,19 @@ export default function HomePage() {
     }
   }, [filters]);
 
-  useEffect(() => { fetchTasks(); }, [fetchTasks]);
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   async function handleCreate(data: Parameters<typeof api.tasks.create>[0]) {
     await api.tasks.create(data);
     fetchTasks();
   }
 
-  async function handleUpdate(task: Task, data: Parameters<typeof api.tasks.update>[1]) {
+  async function handleUpdate(
+    task: Task,
+    data: Parameters<typeof api.tasks.update>[1],
+  ) {
     await api.tasks.update(task.id, data);
     fetchTasks();
   }
@@ -54,71 +62,77 @@ export default function HomePage() {
   }
 
   const todoCount = tasks.filter((t) => t.status === 'todo').length;
-  const inProgressCount = tasks.filter((t) => t.status === 'in-progress').length;
+  const inProgressCount = tasks.filter(
+    (t) => t.status === 'in-progress',
+  ).length;
   const doneCount = tasks.filter((t) => t.status === 'done').length;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-3xl px-4 py-10">
+    <main className='min-h-screen bg-slate-50'>
+      <div className='mx-auto max-w-3xl px-4 py-10'>
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+        <div className='mb-8'>
+          <div className='flex items-center justify-between'>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">DevLog</h1>
-              <p className="mt-0.5 text-sm text-slate-500">Task tracker for engineering teams</p>
+              <h1 className='text-2xl font-bold text-slate-900'>DevLog</h1>
+              <p className='mt-0.5 text-sm text-slate-500'>
+                Task tracker for engineering teams
+              </p>
             </div>
-            <div className="flex gap-2">
+            <div className='flex gap-2'>
               <button
                 onClick={() => setModal({ kind: 'prioritize' })}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+                className='cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50'
               >
                 ◈ Plan my day
               </button>
               <button
                 onClick={() => setModal({ kind: 'create' })}
-                className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+                className='cursor-pointer rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700'
               >
                 + New task
               </button>
             </div>
           </div>
 
-          {/* Stats */}
           {!loading && tasks.length > 0 && (
-            <div className="mt-4 flex gap-4 text-sm">
-              <span className="text-slate-500">{todoCount} todo</span>
-              <span className="text-blue-600">{inProgressCount} in progress</span>
-              <span className="text-green-600">{doneCount} done</span>
+            <div className='mt-4 flex gap-4 text-sm'>
+              <span className='text-slate-500'>{todoCount} todo</span>
+              <span className='text-blue-600'>
+                {inProgressCount} in progress
+              </span>
+              <span className='text-green-600'>{doneCount} done</span>
             </div>
           )}
         </div>
 
-        {/* Filters */}
-        <div className="mb-5">
+        <div className='mb-5'>
           <Filters filters={filters} onChange={setFilters} />
         </div>
 
-        {/* Content */}
         {loading && (
-          <div className="space-y-3">
+          <div className='space-y-3'>
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 animate-pulse rounded-xl bg-slate-200" />
+              <div
+                key={i}
+                className='h-24 animate-pulse rounded-xl bg-slate-200'
+              />
             ))}
           </div>
         )}
 
         {error && (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+          <div className='rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600'>
             {error}
           </div>
         )}
 
         {!loading && !error && tasks.length === 0 && (
-          <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center">
-            <p className="text-slate-400">No tasks yet.</p>
+          <div className='rounded-xl border border-dashed border-slate-300 p-12 text-center'>
+            <p className='text-slate-400'>No tasks yet.</p>
             <button
               onClick={() => setModal({ kind: 'create' })}
-              className="mt-3 text-sm text-blue-600 hover:underline"
+              className='mt-3 text-sm text-blue-600 hover:underline'
             >
               Create your first task
             </button>
@@ -126,7 +140,7 @@ export default function HomePage() {
         )}
 
         {!loading && !error && tasks.length > 0 && (
-          <div className="space-y-3">
+          <div className='space-y-3'>
             {tasks.map((task) => (
               <TaskCard
                 key={task.id}
@@ -140,12 +154,8 @@ export default function HomePage() {
         )}
       </div>
 
-      {/* Modals */}
       {modal?.kind === 'create' && (
-        <TaskForm
-          onSubmit={handleCreate}
-          onClose={() => setModal(null)}
-        />
+        <TaskForm onSubmit={handleCreate} onClose={() => setModal(null)} />
       )}
 
       {modal?.kind === 'edit' && (
@@ -159,7 +169,10 @@ export default function HomePage() {
       {modal?.kind === 'decompose' && (
         <DecomposeModal
           task={modal.task}
-          onClose={() => { setModal(null); fetchTasks(); }}
+          onClose={() => {
+            setModal(null);
+            fetchTasks();
+          }}
         />
       )}
 
