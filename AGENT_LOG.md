@@ -24,7 +24,7 @@ I chose:
 I have created a clear implementation plan with a detailed description of the features. The agent implemented this structure once I described it.
 
 ### Feature scope
-I defined which AI functions to build (decomposition + prioritization) and explicitly ruled out others (status update generator) to stay within the time budget. The agent did not decide what to build.
+I defined which AI functions to build and in what order. The agent did not decide what to build. All three agents from the spec were implemented: decomposition (B), prioritization (A), and status update generator (C).
 
 ### AI agent design
 I designed the multi-step behavior of both agents before asking the agent to implement them:
@@ -79,7 +79,7 @@ I chose to keep the repos (`taskRepo`, `subtaskRepo`) as plain functions rather 
 ## What was deliberately left out and why
 
 - **Subtask display in UI** — subtasks are created and stored but not shown on the task list. Displaying them well (expandable cards, per-subtask status) would have pushed well beyond the time budget. I chose to ship the storage and AI creation correctly rather than add a half-finished UI.
-- **Status update generator (feature C)** — the decomposition agent already demonstrates multi-step reasoning with a clarification loop. Adding a third agent would have diluted quality across all three.
+- **Subtask display in full detail** — subtasks are created, stored, and their count is shown on the task card, but an expandable per-subtask UI with status toggles was not built.
 - **Optimistic UI** — mutations refetch from the server. Correct over clever given the scope.
 - **Migrations system** — `CREATE TABLE IF NOT EXISTS` is sufficient for a local single-user tool. A proper migration runner would be the first addition before any shared deployment.
 - **Authentication** — not required per spec.

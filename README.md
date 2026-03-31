@@ -30,6 +30,7 @@ API endpoints:
 - `GET/PATCH/DELETE /api/tasks/:id` — single task
 - `POST /api/ai/decompose` — decomposition agent
 - `POST /api/ai/prioritize` — prioritization agent
+- `POST /api/ai/status-update` — status update agent
 
 **Architecture decision: monolith**
 
@@ -68,6 +69,14 @@ Multi-step flow:
 1. **Local scoring** (no LLM) — deterministic score per task: `priority_weight + age_days (capped 30) + in_progress_bonus`; `done` tasks excluded
 2. **LLM review** — ranked list is sent to the LLM, which may reorder for logical dependencies and writes a 2–4 sentence "plan for the day"
 3. **Merge** — final list uses LLM order; any tasks the LLM dropped are appended from the local ranking
+
+### Status update agent (`/api/ai/status-update`)
+
+Single-step flow:
+
+1. **Fetch context** — task and its subtasks are loaded from the DB
+2. **Generate update** — LLM writes a 2–4 sentence Slack-style async update; tone adapts to task status (`done` → celebratory, `in-progress` → matter-of-fact, `todo` → planning-oriented)
+3. **Copy to clipboard** — result is shown in a modal with a one-click copy button
 
 ### LLM client
 
