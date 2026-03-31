@@ -1,4 +1,5 @@
 import { getLLMClient } from './llmClient';
+import { parseJSON } from './parseJSON';
 import type { Task } from '../types';
 
 export interface ClarificationNeeded {
@@ -41,7 +42,7 @@ Task description: "${task.description || '(no description provided)'}"`,
   ]);
 
   try {
-    return JSON.parse(raw);
+    return parseJSON(raw);
   } catch {
     return { needsClarification: false, questions: [] };
   }
@@ -81,8 +82,8 @@ Status: ${task.status}${answersSection}`,
   ]);
 
   try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed.subtasks)) return parsed.subtasks as string[];
+    const parsed = parseJSON<{ subtasks: string[] }>(raw);
+    if (Array.isArray(parsed.subtasks)) return parsed.subtasks;
   } catch {
     // fall through
   }

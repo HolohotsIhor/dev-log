@@ -1,4 +1,5 @@
 import { getLLMClient } from './llmClient';
+import { parseJSON } from './parseJSON';
 import type { Task, TaskPriority } from '../types';
 
 export interface PrioritizeResult {
@@ -72,7 +73,7 @@ Review this order and return your recommended sequence with reasoning.`,
   ]);
 
   try {
-    const parsed = JSON.parse(raw);
+    const parsed = parseJSON<{ orderedIds: string[]; reasoning: string }>(raw);
     if (Array.isArray(parsed.orderedIds) && typeof parsed.reasoning === 'string') {
       return parsed;
     }

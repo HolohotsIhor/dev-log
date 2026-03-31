@@ -52,7 +52,9 @@ function createAnthropicClient(apiKey: string, model: string): LLMClient {
       }
 
       const data = await res.json();
-      return data.content[0].text as string;
+      const text = data?.content?.[0]?.text;
+      if (!text) throw new Error(`Anthropic returned empty content (model: ${model})`);
+      return text as string;
     },
   };
 }

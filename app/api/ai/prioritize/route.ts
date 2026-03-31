@@ -5,7 +5,12 @@ import { runPrioritizeAgent } from '@/lib/ai/prioritizeAgent';
 runMigrations();
 
 export async function POST() {
-  const tasks = listTasks();
-  const result = await runPrioritizeAgent(tasks);
-  return NextResponse.json(result);
+  try {
+    const tasks = listTasks();
+    const result = await runPrioritizeAgent(tasks);
+    return NextResponse.json(result);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Internal error';
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
