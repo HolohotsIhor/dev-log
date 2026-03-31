@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import type { Task, CreateTaskInput, TaskStatus, TaskPriority } from "@/lib/types";
+import { useEffect, useRef, useState } from 'react';
+import type { Task, CreateTaskInput, TaskStatus, TaskPriority } from '@/lib/types';
 
 interface Props {
   initial?: Task;
@@ -9,14 +9,14 @@ interface Props {
   onClose: () => void;
 }
 
-const STATUSES: TaskStatus[] = ["todo", "in-progress", "done"];
-const PRIORITIES: TaskPriority[] = ["low", "medium", "high"];
+const STATUSES: TaskStatus[] = ['todo', 'in-progress', 'done'];
+const PRIORITIES: TaskPriority[] = ['low', 'medium', 'high'];
 
 export function TaskForm({ initial, onSubmit, onClose }: Props) {
-  const [title, setTitle] = useState(initial?.title ?? "");
-  const [description, setDescription] = useState(initial?.description ?? "");
-  const [status, setStatus] = useState<TaskStatus>(initial?.status ?? "todo");
-  const [priority, setPriority] = useState<TaskPriority>(initial?.priority ?? "medium");
+  const [title, setTitle] = useState(initial?.title ?? '');
+  const [description, setDescription] = useState(initial?.description ?? '');
+  const [status, setStatus] = useState<TaskStatus>(initial?.status ?? 'todo');
+  const [priority, setPriority] = useState<TaskPriority>(initial?.priority ?? 'medium');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,7 +34,7 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
       await onSubmit({ title, description, status, priority });
       onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,7 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
     >
       <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
         <h2 className="mb-5 text-lg font-semibold text-slate-800">
-          {initial ? "Edit task" : "New task"}
+          {initial ? 'Edit task' : 'New task'}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,7 +123,7 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
               disabled={loading || !title.trim()}
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
             >
-              {loading ? "Saving…" : initial ? "Save changes" : "Create task"}
+              {loading ? 'Saving…' : initial ? 'Save changes' : 'Create task'}
             </button>
           </div>
         </form>

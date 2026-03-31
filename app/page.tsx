@@ -1,21 +1,24 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import { api, type TaskFiltersQuery } from "@/lib/apiClient";
-import type { Task } from "@/lib/types";
-import { TaskCard } from "@/components/TaskCard";
-import { TaskForm } from "@/components/TaskForm";
-import { Filters } from "@/components/Filters";
+import { useCallback, useEffect, useState } from 'react';
+import { api, type TaskFiltersQuery } from '@/lib/apiClient';
+import type { Task } from '@/lib/types';
+import { TaskCard } from '@/components/TaskCard';
+import { TaskForm } from '@/components/TaskForm';
+import { Filters } from '@/components/Filters';
+import { DecomposeModal } from '@/components/DecomposeModal';
+import { PrioritizePanel } from '@/components/PrioritizePanel';
 
 type Modal =
-  | { kind: "create" }
-  | { kind: "edit"; task: Task }
-  | { kind: "decompose"; task: Task }
+  | { kind: 'create' }
+  | { kind: 'edit'; task: Task }
+  | { kind: 'decompose'; task: Task }
+  | { kind: 'prioritize' }
   | null;
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filters, setFilters] = useState<TaskFiltersQuery>({ sortBy: "createdAt", sortDir: "desc" });
+  const [filters, setFilters] = useState<TaskFiltersQuery>({ sortBy: 'createdAt', sortDir: 'desc' });
   const [modal, setModal] = useState<Modal>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +29,7 @@ export default function HomePage() {
     try {
       setTasks(await api.tasks.list(filters));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load tasks");
+      setError(e instanceof Error ? e.message : 'Failed to load tasks');
     } finally {
       setLoading(false);
     }
@@ -45,14 +48,14 @@ export default function HomePage() {
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this task?")) return;
+    if (!confirm('Delete this task?')) return;
     await api.tasks.delete(id);
     fetchTasks();
   }
 
-  const todoCount = tasks.filter((t) => t.status === "todo").length;
-  const inProgressCount = tasks.filter((t) => t.status === "in-progress").length;
-  const doneCount = tasks.filter((t) => t.status === "done").length;
+  const todoCount = tasks.filter((t) => t.status === 'todo').length;
+  const inProgressCount = tasks.filter((t) => t.status === 'in-progress').length;
+  const doneCount = tasks.filter((t) => t.status === 'done').length;
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -64,12 +67,20 @@ export default function HomePage() {
               <h1 className="text-2xl font-bold text-slate-900">DevLog</h1>
               <p className="mt-0.5 text-sm text-slate-500">Task tracker for engineering teams</p>
             </div>
-            <button
-              onClick={() => setModal({ kind: "create" })}
-              className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
-            >
-              + New task
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setModal({ kind: 'prioritize' })}
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+              >
+                ◈ Plan my day
+              </button>
+              <button
+                onClick={() => setModal({ kind: 'create' })}
+                className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+              >
+                + New task
+              </button>
+            </div>
           </div>
 
           {/* Stats */}
@@ -106,7 +117,7 @@ export default function HomePage() {
           <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center">
             <p className="text-slate-400">No tasks yet.</p>
             <button
-              onClick={() => setModal({ kind: "create" })}
+              onClick={() => setModal({ kind: 'create' })}
               className="mt-3 text-sm text-blue-600 hover:underline"
             >
               Create your first task
@@ -120,9 +131,9 @@ export default function HomePage() {
               <TaskCard
                 key={task.id}
                 task={task}
-                onEdit={(t) => setModal({ kind: "edit", task: t })}
+                onEdit={(t) => setModal({ kind: 'edit', task: t })}
                 onDelete={handleDelete}
-                onDecompose={(t) => setModal({ kind: "decompose", task: t })}
+                onDecompose={(t) => setModal({ kind: 'decompose', task: t })}
               />
             ))}
           </div>
@@ -130,14 +141,14 @@ export default function HomePage() {
       </div>
 
       {/* Modals */}
-      {modal?.kind === "create" && (
+      {modal?.kind === 'create' && (
         <TaskForm
           onSubmit={handleCreate}
           onClose={() => setModal(null)}
         />
       )}
 
-      {modal?.kind === "edit" && (
+      {modal?.kind === 'edit' && (
         <TaskForm
           initial={modal.task}
           onSubmit={(data) => handleUpdate(modal.task, data)}
@@ -145,16 +156,15 @@ export default function HomePage() {
         />
       )}
 
-      {/* Decompose modal placeholder — will be implemented in AI step */}
-      {modal?.kind === "decompose" && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setModal(null)}
-        >
-          <div className="rounded-2xl bg-white p-6 text-sm text-slate-500 shadow-xl">
-            AI Decompose — coming soon
-          </div>
-        </div>
+      {modal?.kind === 'decompose' && (
+        <DecomposeModal
+          task={modal.task}
+          onClose={() => { setModal(null); fetchTasks(); }}
+        />
+      )}
+
+      {modal?.kind === 'prioritize' && (
+        <PrioritizePanel onClose={() => setModal(null)} />
       )}
     </main>
   );

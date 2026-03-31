@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import type { Task } from "@/lib/types";
-import { StatusBadge, PriorityBadge } from "./Badge";
+import type { Task } from '@/lib/types';
+import { StatusBadge, PriorityBadge } from './Badge';
 
 interface Props {
   task: Task;
@@ -11,9 +11,9 @@ interface Props {
 }
 
 export function TaskCard({ task, onEdit, onDelete, onDecompose }: Props) {
-  const createdDate = new Date(task.createdAt).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
+  const createdDate = new Date(task.createdAt).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
   });
 
   return (
@@ -52,6 +52,11 @@ export function TaskCard({ task, onEdit, onDelete, onDecompose }: Props) {
       <div className="mt-3 flex items-center gap-2">
         <StatusBadge status={task.status} />
         <PriorityBadge priority={task.priority} />
+        {task.subtaskCount > 0 && (
+          <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-500">
+            {task.subtaskCount} {task.subtaskCount === 1 ? 'subtask' : 'subtasks'}
+          </span>
+        )}
         <span className="ml-auto text-xs text-slate-400">{createdDate}</span>
       </div>
     </div>

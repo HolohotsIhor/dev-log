@@ -1,5 +1,5 @@
-export type TaskStatus = "todo" | "in-progress" | "done";
-export type TaskPriority = "low" | "medium" | "high";
+export type TaskStatus = 'todo' | 'in-progress' | 'done';
+export type TaskPriority = 'low' | 'medium' | 'high';
 
 export interface Task {
   id: string;
@@ -9,6 +9,7 @@ export interface Task {
   priority: TaskPriority;
   createdAt: string; // ISO 8601
   updatedAt: string;
+  subtaskCount: number;
 }
 
 export interface Subtask {
@@ -19,5 +20,5 @@ export interface Subtask {
   createdAt: string;
 }
 
-export type CreateTaskInput = Omit<Task, "id" | "createdAt" | "updatedAt">;
+export type CreateTaskInput = Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'subtaskCount'>;
 export type UpdateTaskInput = Partial<CreateTaskInput>;

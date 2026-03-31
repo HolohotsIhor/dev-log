@@ -1,21 +1,21 @@
-import type { TaskStatus, TaskPriority } from "@/lib/types";
+import type { TaskStatus, TaskPriority } from '@/lib/types';
 
 const STATUS_STYLES: Record<TaskStatus, string> = {
-  "todo":        "bg-slate-100 text-slate-600",
-  "in-progress": "bg-blue-100 text-blue-700",
-  "done":        "bg-green-100 text-green-700",
+  'todo':        'bg-slate-100 text-slate-600',
+  'in-progress': 'bg-blue-100 text-blue-700',
+  'done':        'bg-green-100 text-green-700',
 };
 
 const STATUS_LABELS: Record<TaskStatus, string> = {
-  "todo":        "Todo",
-  "in-progress": "In Progress",
-  "done":        "Done",
+  'todo':        'Todo',
+  'in-progress': 'In Progress',
+  'done':        'Done',
 };
 
 const PRIORITY_STYLES: Record<TaskPriority, string> = {
-  low:    "bg-slate-100 text-slate-500",
-  medium: "bg-yellow-100 text-yellow-700",
-  high:   "bg-red-100 text-red-600",
+  low:    'bg-slate-100 text-slate-500',
+  medium: 'bg-yellow-100 text-yellow-700',
+  high:   'bg-red-100 text-red-600',
 };
 
 export function StatusBadge({ status }: { status: TaskStatus }) {

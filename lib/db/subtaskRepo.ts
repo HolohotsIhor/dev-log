@@ -1,10 +1,10 @@
-import { randomUUID } from "crypto";
-import { db } from "./client";
-import type { Subtask, TaskStatus } from "../types";
+import { randomUUID } from 'crypto';
+import { db } from './client';
+import type { Subtask, TaskStatus } from '../types';
 
 export function listSubtasks(parentTaskId: string): Subtask[] {
   return db
-    .prepare("SELECT * FROM subtasks WHERE parentTaskId = ? ORDER BY createdAt ASC")
+    .prepare('SELECT * FROM subtasks WHERE parentTaskId = ? ORDER BY createdAt ASC')
     .all(parentTaskId) as Subtask[];
 }
 
@@ -13,7 +13,7 @@ export function createSubtask(parentTaskId: string, title: string): Subtask {
     id: randomUUID(),
     parentTaskId,
     title,
-    status: "todo",
+    status: 'todo',
     createdAt: new Date().toISOString(),
   };
 
@@ -26,12 +26,12 @@ export function createSubtask(parentTaskId: string, title: string): Subtask {
 }
 
 export function updateSubtaskStatus(id: string, status: TaskStatus): boolean {
-  const result = db.prepare("UPDATE subtasks SET status = ? WHERE id = ?").run(status, id);
+  const result = db.prepare('UPDATE subtasks SET status = ? WHERE id = ?').run(status, id);
   return result.changes > 0;
 }
 
 export function deleteSubtask(id: string): boolean {
-  const result = db.prepare("DELETE FROM subtasks WHERE id = ?").run(id);
+  const result = db.prepare('DELETE FROM subtasks WHERE id = ?').run(id);
   return result.changes > 0;
 }
 
@@ -51,7 +51,7 @@ export function bulkCreateSubtasks(parentTaskId: string, titles: string[]): Subt
     id: randomUUID(),
     parentTaskId,
     title,
-    status: "todo",
+    status: 'todo',
     createdAt: now,
   }));
 

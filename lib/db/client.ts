@@ -1,7 +1,7 @@
-import Database from "better-sqlite3";
-import path from "path";
+import Database from 'better-sqlite3';
+import path from 'path';
 
-const DB_PATH = path.join(process.cwd(), "data", "devlog.db");
+const DB_PATH = path.join(process.cwd(), 'data', 'devlog.db');
 
 // Singleton: one connection per Node.js process (Next.js dev HMR safe via global)
 declare global {
@@ -11,8 +11,8 @@ declare global {
 
 function openDatabase(): Database.Database {
   const db = new Database(DB_PATH);
-  db.pragma("journal_mode = WAL");
-  db.pragma("foreign_keys = ON");
+  db.pragma('journal_mode = WAL');
+  db.pragma('foreign_keys = ON');
   return db;
 }
 

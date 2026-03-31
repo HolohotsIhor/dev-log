@@ -1,0 +1,33 @@
+---
+description: Code style conventions for this project
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# Code Style
+
+## Quotes
+
+Always use single quotes for strings. Double quotes only inside JSX attribute values.
+
+```ts
+// ❌ BAD
+import { foo } from "./foo";
+const label = "hello";
+
+// ✅ GOOD
+import { foo } from './foo';
+const label = 'hello';
+```
+
+```tsx
+// ✅ GOOD — double quotes inside JSX attributes are fine
+<input placeholder="Your answer…" />
+```
+
+## Other conventions
+
+- No semicolons unless required to disambiguate
+- `const` over `let` wherever possible
+- Explicit return types on exported functions
+- No `any` — use `unknown` and narrow
