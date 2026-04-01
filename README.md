@@ -23,7 +23,7 @@ components / app/page.tsx   — UI, React state
 app/api/                    — HTTP layer: parse request, call server/, return JSON
 server/ai/                  — agent logic (LLM calls, multi-step flows)
 server/db/                  — data access (SQLite repositories)
-client/                     — client-only code (API fetch wrapper)
+client/                     — client-only code (API fetch wrapper; one file for now, but kept separate for architectural clarity)
 ```
 
 API endpoints:
