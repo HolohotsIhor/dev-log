@@ -88,7 +88,7 @@ Status: ${task.status}${answersSection}`,
     const parsed = parseJSON<{ subtasks: string[] }>(raw);
     if (Array.isArray(parsed.subtasks)) return parsed.subtasks;
   } catch {
-    // TODO: handle error
+    // fall through to throw below
   }
 
   throw new Error('Failed to parse subtasks from LLM response');

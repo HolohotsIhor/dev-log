@@ -1,4 +1,4 @@
-import type { TaskStatus, TaskPriority } from '@/lib/types';
+import type { TaskStatus, TaskPriority } from '@/server/types';
 
 const STATUS_STYLES: Record<TaskStatus, string> = {
   todo: 'bg-slate-100 text-slate-600',

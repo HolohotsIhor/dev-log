@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z, ZodError } from 'zod';
-import { runMigrations, getTask, bulkCreateSubtasks } from '@/lib/db';
-import { runDecomposeAgent } from '@/lib/ai/decomposeAgent';
+import { runMigrations, getTask, bulkCreateSubtasks } from '@/server/db';
+import { runDecomposeAgent } from '@/server/ai/decomposeAgent';
 
 runMigrations();
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Task } from '@/lib/types';
+import type { Task } from '@/server/types';
 import { StatusBadge, PriorityBadge } from './Badge';
 import { Button } from './Button';
 
@@ -48,9 +48,7 @@ export function PrioritizePanel({ onClose }: Props) {
             <span className='text-base'>◈</span>
             <h2 className='text-lg font-semibold text-slate-800'>Plan my day</h2>
           </div>
-          <button onClick={onClose} className='cursor-pointer text-slate-400 hover:text-slate-600'>
-            ✕
-          </button>
+          <Button variant='icon' onClick={onClose}>✕</Button>
         </div>
 
         {state.kind === 'idle' && (

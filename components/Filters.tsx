@@ -1,7 +1,7 @@
 'use client';
 
-import type { TaskStatus } from '@/lib/types';
-import type { TaskFiltersQuery } from '@/lib/apiClient';
+import type { TaskStatus } from '@/server/types';
+import type { TaskFiltersQuery } from '@/client/apiClient';
 
 interface Props {
   filters: TaskFiltersQuery;

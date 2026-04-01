@@ -20,9 +20,10 @@ Four layers, each knowing only about the one below:
 
 ```
 components / app/page.tsx   — UI, React state
-app/api/                    — HTTP layer: parse request, call lib, return JSON
-lib/ai/                     — agent logic (LLM calls, multi-step flows)
-lib/db/                     — data access (SQLite repositories)
+app/api/                    — HTTP layer: parse request, call server/, return JSON
+server/ai/                  — agent logic (LLM calls, multi-step flows)
+server/db/                  — data access (SQLite repositories)
+client/                     — client-only code (API fetch wrapper)
 ```
 
 API endpoints:
@@ -36,7 +37,6 @@ API endpoints:
 
 A deliberate choice for this scope. A single Next.js app covers both frontend and backend — one repo, one `npm install && npm run dev`, zero infrastructure. Splitting into a separate API service would add deployment complexity with no real benefit for a single-user local tool.
 
-**Note on `lib/`:** server-only code (`lib/db/`, `lib/ai/`, `lib/validation.ts`) and client-only code (`lib/apiClient.ts`) intentionally coexist in one folder. For a project of this size, splitting into separate `server/` and `client/` directories would add structural overhead with no practical benefit. Next.js bundler keeps them apart at build time as long as imports are used in the right places.
 
 **Tech choices:**
 - **Next.js App Router** with Route Handlers — API routes live alongside the UI, no separate backend process

@@ -1,13 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { runMigrations, getTask, listSubtasks } from '@/lib/db';
-import { runStatusUpdateAgent } from '@/lib/ai/statusUpdateAgent';
+import { runMigrations, getTask, listSubtasks } from '@/server/db';
+import { runStatusUpdateAgent } from '@/server/ai/statusUpdateAgent';
 
 runMigrations();
 
 const requestSchema = z.object({ taskId: z.string() });
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const parsed = requestSchema.safeParse(body);
   if (!parsed.success) {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { runMigrations, listTasks } from '@/lib/db';
-import { runPrioritizeAgent } from '@/lib/ai/prioritizeAgent';
+import { runMigrations, listTasks } from '@/server/db';
+import { runPrioritizeAgent } from '@/server/ai/prioritizeAgent';
 
 runMigrations();
 

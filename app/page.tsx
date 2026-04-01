@@ -1,14 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { api, type TaskFiltersQuery } from '@/lib/apiClient';
-import type { Task } from '@/lib/types';
+import { api, type TaskFiltersQuery } from '@/client/apiClient';
+import type { Task } from '@/server/types';
 import { TaskCard } from '@/components/TaskCard';
 import { TaskForm } from '@/components/TaskForm';
 import { Filters } from '@/components/Filters';
 import { DecomposeModal } from '@/components/DecomposeModal';
 import { PrioritizePanel } from '@/components/PrioritizePanel';
 import { StatusUpdateModal } from '@/components/StatusUpdateModal';
+import { Button } from '@/components/Button';
 
 type Modal =
   | { kind: 'create' }
@@ -82,18 +83,12 @@ export default function HomePage() {
               </p>
             </div>
             <div className='flex gap-2'>
-              <button
-                onClick={() => setModal({ kind: 'prioritize' })}
-                className='cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50'
-              >
+              <Button variant='outline' onClick={() => setModal({ kind: 'prioritize' })}>
                 ◈ Plan my day
-              </button>
-              <button
-                onClick={() => setModal({ kind: 'create' })}
-                className='cursor-pointer rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700'
-              >
+              </Button>
+              <Button variant='primary' onClick={() => setModal({ kind: 'create' })}>
                 + New task
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -132,12 +127,13 @@ export default function HomePage() {
         {!loading && !error && tasks.length === 0 && (
           <div className='rounded-xl border border-dashed border-slate-300 p-12 text-center'>
             <p className='text-slate-400'>No tasks yet.</p>
-            <button
+            <Button
+              variant='link'
+              className='mt-3'
               onClick={() => setModal({ kind: 'create' })}
-              className='cursor-pointer mt-3 text-sm text-blue-600 hover:underline'
             >
               Create your first task
-            </button>
+            </Button>
           </div>
         )}
 

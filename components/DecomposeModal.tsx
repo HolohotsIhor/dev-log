@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Task } from '@/lib/types';
+import type { Task } from '@/server/types';
 import { Button } from './Button';
 
 interface Props {
@@ -146,12 +146,9 @@ export function DecomposeModal({ task, onClose }: Props) {
             </ul>
             <div className='flex justify-end gap-2'>
               <Button variant='ghost' onClick={onClose}>Discard</Button>
-              <button
-                onClick={() => saveSubtasks(step.subtasks)}
-                className='rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700'
-              >
+              <Button variant='primary' onClick={() => saveSubtasks(step.subtasks)}>
                 Save subtasks
-              </button>
+              </Button>
             </div>
           </div>
         )}

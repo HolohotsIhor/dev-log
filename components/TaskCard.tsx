@@ -1,7 +1,8 @@
 'use client';
 
-import type { Task } from '@/lib/types';
+import type { Task } from '@/server/types';
 import { StatusBadge, PriorityBadge } from './Badge';
+import { Button } from './Button';
 
 interface Props {
   task: Task;
@@ -32,32 +33,14 @@ export function TaskCard({ task, onEdit, onDelete, onDecompose, onStatusUpdate }
         </div>
 
         <div className='flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100'>
-          <button
-            onClick={() => onDecompose(task)}
-            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-            title='Decompose with AI'
-          >
+          <Button variant='compact' onClick={() => onDecompose(task)} title='Decompose with AI'>
             ✦ AI
-          </button>
-          <button
-            onClick={() => onStatusUpdate(task)}
-            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-            title='Generate status update'
-          >
+          </Button>
+          <Button variant='compact' onClick={() => onStatusUpdate(task)} title='Generate status update'>
             ⊹ Update
-          </button>
-          <button
-            onClick={() => onEdit(task)}
-            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-slate-500 hover:bg-slate-100 hover:text-slate-700'
-          >
-            Edit
-          </button>
-          <button
-            onClick={() => onDelete(task.id)}
-            className='cursor-pointer rounded-lg px-2 py-1 text-xs text-red-400 hover:bg-red-50 hover:text-red-600'
-          >
-            Delete
-          </button>
+          </Button>
+          <Button variant='compact' onClick={() => onEdit(task)}>Edit</Button>
+          <Button variant='compactDanger' onClick={() => onDelete(task.id)}>Delete</Button>
         </div>
       </div>
 

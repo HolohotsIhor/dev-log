@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { runMigrations, listTasks, createTask } from '@/lib/db';
-import { createTaskSchema, taskFiltersSchema } from '@/lib/validation';
+import { runMigrations, listTasks, createTask } from '@/server/db';
+import { createTaskSchema, taskFiltersSchema } from '@/server/validation';
 import { ZodError } from 'zod';
 
 runMigrations();

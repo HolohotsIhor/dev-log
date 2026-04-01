@@ -15,3 +15,24 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **DB layer**: sorting and filtering belong in SQL (`ORDER BY`, `WHERE`), not in JavaScript after fetching
 - **Dependencies**: no new packages without a strong reason — this project is intentionally minimal
 - **Comments**: no decorative section dividers (`─── Section ───`), no comments that narrate what the code obviously does; only explain non-obvious intent or trade-offs
+
+## LLM agents (`server/ai/`)
+
+- One exported `run*` function per file; internal steps are private functions in the same file
+- Always include `"Respond ONLY with valid JSON"` in the system prompt
+- Always use `parseJSON()` from `server/ai/parseJSON.ts` to parse LLM responses — it strips markdown fences
+- Always provide a fallback for unparseable output; a bad LLM response must never be an unhandled crash
+- Deterministic logic first, LLM second — if something can be computed locally, do it before calling the LLM
+
+## API routes (`app/api/`)
+
+- Call `runMigrations()` at the top of every route module
+- Use `NextRequest` / `NextResponse`, not the native `Request` / `Response`
+- Validate input with Zod at the route level only — do not spread Zod into `server/`
+- Route handler responsibility: parse request → call a `server/` function → return JSON; no business logic in the route itself
+
+## UI state
+
+- New modal flow: add a branch to the `Modal` discriminated union in `page.tsx` first
+- Component state machines use discriminated unions (`{ kind: 'idle' } | { kind: 'loading' } | ...`), not boolean flags
+- AI endpoint calls (`fetch('/api/ai/...')`) stay inside the component; tasks CRUD goes through `client/apiClient.ts`

@@ -53,26 +53,26 @@ async function getLLMPlan(
       role: 'system',
       content: `You are an engineering team lead helping a developer plan their workday.
 
-You receive a list of tasks pre-sorted by a scoring algorithm (priority + age + in-progress bonus).
-Your job is to:
-1. Review the order for logical sense (dependencies, natural grouping, context switching cost)
-2. Optionally reorder if you see a better sequence
-3. Write a concise "plan for the day" — 2-4 sentences, direct and practical
+      You receive a list of tasks pre-sorted by a scoring algorithm (priority + age + in-progress bonus).
+      Your job is to:
+      1. Review the order for logical sense (dependencies, natural grouping, context switching cost)
+      2. Optionally reorder if you see a better sequence
+      3. Write a concise "plan for the day" — 2-4 sentences, direct and practical
 
-Respond ONLY with valid JSON:
-{
-  "orderedIds": ["id1", "id2", ...],
-  "reasoning": "Your plan in 2-4 sentences."
-}`,
+      Respond ONLY with valid JSON:
+      {
+        "orderedIds": ["id1", "id2", ...],
+        "reasoning": "Your plan in 2-4 sentences."
+      }`,
     },
     {
       role: 'user',
       content: `PRIORITIZE
 
-Tasks (pre-scored, best first):
-${taskList}
+      Tasks (pre-scored, best first):
+      ${taskList}
 
-Review this order and return your recommended sequence with reasoning.`,
+      Review this order and return your recommended sequence with reasoning.`,
     },
   ]);
 
@@ -85,7 +85,7 @@ Review this order and return your recommended sequence with reasoning.`,
       return parsed;
     }
   } catch {
-    // TODO: handle error
+    // fall through to local-ranking fallback below
   }
 
   return {

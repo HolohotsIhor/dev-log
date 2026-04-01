@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Task } from '@/lib/types';
+import type { Task } from '@/server/types';
 import { Button } from './Button';
 
 interface Props {

@@ -3,7 +3,7 @@ import type {
   CreateTaskInput,
   UpdateTaskInput,
   TaskStatus,
-} from './types';
+} from '@/server/types';
 
 export interface TaskFiltersQuery {
   status?: TaskStatus;

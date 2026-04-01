@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { Task, CreateTaskInput, TaskStatus, TaskPriority } from '@/lib/types';
+import type { Task, CreateTaskInput, TaskStatus, TaskPriority } from '@/server/types';
 import { Button } from './Button';
 
 interface Props {

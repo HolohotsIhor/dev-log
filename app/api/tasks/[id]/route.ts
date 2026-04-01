@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getTask, updateTask, deleteTask } from '@/lib/db';
-import { updateTaskSchema } from '@/lib/validation';
+import { getTask, updateTask, deleteTask } from '@/server/db';
+import { updateTaskSchema } from '@/server/validation';
 import { ZodError } from 'zod';
 
 type Params = { params: Promise<{ id: string }> };
