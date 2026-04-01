@@ -1,12 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type {
-  Task,
-  CreateTaskInput,
-  TaskStatus,
-  TaskPriority,
-} from '@/lib/types';
+import type { Task, CreateTaskInput, TaskStatus, TaskPriority } from '@/lib/types';
+import { Button } from './Button';
 
 interface Props {
   initial?: Task;
@@ -21,9 +17,7 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
   const [title, setTitle] = useState(initial?.title ?? '');
   const [description, setDescription] = useState(initial?.description ?? '');
   const [status, setStatus] = useState<TaskStatus>(initial?.status ?? 'todo');
-  const [priority, setPriority] = useState<TaskPriority>(
-    initial?.priority ?? 'medium',
-  );
+  const [priority, setPriority] = useState<TaskPriority>(initial?.priority ?? 'medium');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,9 +53,7 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
 
         <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
-            <label className='mb-1 block text-sm font-medium text-slate-700'>
-              Title
-            </label>
+            <label className='mb-1 block text-sm font-medium text-slate-700'>Title</label>
             <input
               ref={titleRef}
               value={title}
@@ -74,9 +66,7 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
           </div>
 
           <div>
-            <label className='mb-1 block text-sm font-medium text-slate-700'>
-              Description
-            </label>
+            <label className='mb-1 block text-sm font-medium text-slate-700'>Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -89,35 +79,27 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
 
           <div className='grid grid-cols-2 gap-4'>
             <div>
-              <label className='mb-1 block text-sm font-medium text-slate-700'>
-                Status
-              </label>
+              <label className='mb-1 block text-sm font-medium text-slate-700'>Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
                 className='w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
               >
                 {STATUSES.map((s) => (
-                  <option key={s} value={s} className='capitalize'>
-                    {s}
-                  </option>
+                  <option key={s} value={s} className='capitalize'>{s}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className='mb-1 block text-sm font-medium text-slate-700'>
-                Priority
-              </label>
+              <label className='mb-1 block text-sm font-medium text-slate-700'>Priority</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
                 className='w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
               >
                 {PRIORITIES.map((p) => (
-                  <option key={p} value={p} className='capitalize'>
-                    {p}
-                  </option>
+                  <option key={p} value={p} className='capitalize'>{p}</option>
                 ))}
               </select>
             </div>
@@ -126,20 +108,14 @@ export function TaskForm({ initial, onSubmit, onClose }: Props) {
           {error && <p className='text-sm text-red-500'>{error}</p>}
 
           <div className='flex justify-end gap-2 pt-1'>
-            <button
-              type='button'
-              onClick={onClose}
-              className='cursor-pointer rounded-lg px-4 py-2 text-sm text-slate-600 hover:bg-slate-100'
-            >
-              Cancel
-            </button>
-            <button
+            <Button variant='ghost' type='button' onClick={onClose}>Cancel</Button>
+            <Button
               type='submit'
+              variant='primary'
               disabled={loading || !title.trim()}
-              className='cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50'
             >
               {loading ? 'Saving…' : initial ? 'Save changes' : 'Create task'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

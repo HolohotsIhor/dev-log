@@ -36,6 +36,8 @@ API endpoints:
 
 A deliberate choice for this scope. A single Next.js app covers both frontend and backend — one repo, one `npm install && npm run dev`, zero infrastructure. Splitting into a separate API service would add deployment complexity with no real benefit for a single-user local tool.
 
+**Note on `lib/`:** server-only code (`lib/db/`, `lib/ai/`, `lib/validation.ts`) and client-only code (`lib/apiClient.ts`) intentionally coexist in one folder. For a project of this size, splitting into separate `server/` and `client/` directories would add structural overhead with no practical benefit. Next.js bundler keeps them apart at build time as long as imports are used in the right places.
+
 **Tech choices:**
 - **Next.js App Router** with Route Handlers — API routes live alongside the UI, no separate backend process
 - **better-sqlite3** — file-based persistence, zero config, works offline; no ORM to keep queries explicit

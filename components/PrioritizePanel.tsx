@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { Task } from '@/lib/types';
 import { StatusBadge, PriorityBadge } from './Badge';
+import { Button } from './Button';
 
 interface PrioritizeResult {
   orderedTasks: Task[];
@@ -12,9 +13,6 @@ interface PrioritizeResult {
 interface Props {
   onClose: () => void;
 }
-
-const btnPrimary =
-  'cursor-pointer rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700';
 
 export function PrioritizePanel({ onClose }: Props) {
   const [state, setState] = useState<
@@ -48,14 +46,9 @@ export function PrioritizePanel({ onClose }: Props) {
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2'>
             <span className='text-base'>◈</span>
-            <h2 className='text-lg font-semibold text-slate-800'>
-              Plan my day
-            </h2>
+            <h2 className='text-lg font-semibold text-slate-800'>Plan my day</h2>
           </div>
-          <button
-            onClick={onClose}
-            className='cursor-pointer text-slate-400 hover:text-slate-600'
-          >
+          <button onClick={onClose} className='cursor-pointer text-slate-400 hover:text-slate-600'>
             ✕
           </button>
         </div>
@@ -64,22 +57,11 @@ export function PrioritizePanel({ onClose }: Props) {
           <div className='space-y-4'>
             <p className='text-sm text-slate-600'>
               The agent scores your tasks by priority, age, and current status —
-              then asks the LLM to review the order and write a short plan for
-              your day.
+              then asks the LLM to review the order and write a short plan for your day.
             </p>
             <div className='flex justify-end gap-2'>
-              <button
-                onClick={onClose}
-                className='cursor-pointer rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100'
-              >
-                Cancel
-              </button>
-              <button
-                onClick={run}
-                className={btnPrimary}
-              >
-                Generate plan
-              </button>
+              <Button variant='ghost' onClick={onClose}>Cancel</Button>
+              <Button variant='primary' onClick={run}>Generate plan</Button>
             </div>
           </div>
         )}
@@ -110,9 +92,7 @@ export function PrioritizePanel({ onClose }: Props) {
                       {i + 1}
                     </span>
                     <div className='min-w-0 flex-1'>
-                      <p className='truncate text-sm font-medium text-slate-800'>
-                        {task.title}
-                      </p>
+                      <p className='truncate text-sm font-medium text-slate-800'>{task.title}</p>
                       <div className='mt-1 flex gap-1.5'>
                         <StatusBadge status={task.status} />
                         <PriorityBadge priority={task.priority} />
@@ -124,12 +104,7 @@ export function PrioritizePanel({ onClose }: Props) {
             )}
 
             <div className='flex justify-end'>
-              <button
-                onClick={onClose}
-                className='cursor-pointer rounded-lg bg-slate-100 px-4 py-2 text-sm text-slate-700 hover:bg-slate-200'
-              >
-                Done
-              </button>
+              <Button variant='slate' onClick={onClose}>Done</Button>
             </div>
           </div>
         )}
@@ -140,18 +115,8 @@ export function PrioritizePanel({ onClose }: Props) {
               {state.message}
             </p>
             <div className='flex justify-end gap-2'>
-              <button
-                onClick={onClose}
-                className='rounded-lg px-4 py-2 text-sm text-slate-500 hover:bg-slate-100'
-              >
-                Close
-              </button>
-              <button
-                onClick={() => setState({ kind: 'idle' })}
-                className={btnPrimary}
-              >
-                Retry
-              </button>
+              <Button variant='ghost' onClick={onClose}>Close</Button>
+              <Button variant='primary' onClick={() => setState({ kind: 'idle' })}>Retry</Button>
             </div>
           </div>
         )}
