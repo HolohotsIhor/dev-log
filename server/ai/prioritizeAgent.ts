@@ -7,9 +7,6 @@ export interface PrioritizeResult {
   reasoning: string;
 }
 
-// Scoring weights: priority (main signal) + age in days (prevents starvation, capped at 30)
-// + in-progress bonus (avoid unnecessary context switching).
-// "done" tasks are excluded entirely.
 const PRIORITY_WEIGHT: Record<TaskPriority, number> = {
   high: 30,
   medium: 20,
@@ -85,7 +82,7 @@ async function getLLMPlan(
       return parsed;
     }
   } catch {
-    // fall through to local-ranking fallback below
+    // TODO: fall through to local-ranking fallback below
   }
 
   return {
@@ -109,7 +106,6 @@ export async function runPrioritizeAgent(
   const byId = Object.fromEntries(ranked.map((t) => [t.id, t]));
   const llmOrdered = orderedIds.flatMap((id) => (byId[id] ? [byId[id]] : []));
 
-  // Append tasks the LLM may have dropped from its ordered list
   const includedIds = new Set(llmOrdered.map((t) => t.id));
   const remainder = ranked.filter((t) => !includedIds.has(t.id));
 

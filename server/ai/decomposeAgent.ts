@@ -23,21 +23,21 @@ async function assessClarity(
     {
       role: 'system',
       content: `You are a senior engineering lead. Your job is to assess whether a task description 
-is detailed enough to break it down into actionable subtasks.
+      is detailed enough to break it down into actionable subtasks.
 
-Respond ONLY with valid JSON in this exact shape:
-{"needsClarification": boolean, "questions": string[]}
+      Respond ONLY with valid JSON in this exact shape:
+      {"needsClarification": boolean, "questions": string[]}
 
-- If the task is clear: {"needsClarification": false, "questions": []}
-- If ambiguous: {"needsClarification": true, "questions": ["Question 1?", "Question 2?"]}
-  (max 3 questions, ask only the most important things)`,
+      - If the task is clear: {"needsClarification": false, "questions": []}
+      - If ambiguous: {"needsClarification": true, "questions": ["Question 1?", "Question 2?"]}
+        (max 3 questions, ask only the most important things)`,
     },
     {
       role: 'user',
       content: `CLARIFICATION_CHECK
 
-Task title: "${task.title}"
-Task description: "${task.description || '(no description provided)'}"`,
+      Task title: "${task.title}"
+      Task description: "${task.description || '(no description provided)'}"`,
     },
   ]);
 
@@ -63,42 +63,37 @@ async function generateSubtasks(
       role: 'system',
       content: `You are a senior engineer helping to break down tasks into subtasks.
 
-Generate a list of concrete, actionable subtasks for the given task.
+      Generate a list of concrete, actionable subtasks for the given task.
 
-Rules:
-- 3 to 7 subtasks
-- Each subtask should be independently completable
-- Be specific, not vague ("Write API endpoint for X", not "Do backend")
-- Order them logically (dependencies first)
+      Rules:
+      - 3 to 7 subtasks
+      - Each subtask should be independently completable
+      - Be specific, not vague ("Write API endpoint for X", not "Do backend")
+      - Order them logically (dependencies first)
 
-Respond ONLY with valid JSON: {"subtasks": ["subtask 1", "subtask 2", ...]}`,
+      Respond ONLY with valid JSON: {"subtasks": ["subtask 1", "subtask 2", ...]}`,
     },
     {
       role: 'user',
       content: `DECOMPOSE
 
-Task title: "${task.title}"
-Task description: "${task.description || '(no description)'}"
-Priority: ${task.priority}
-Status: ${task.status}${answersSection}`,
+      Task title: "${task.title}"
+      Task description: "${task.description || '(no description)'}"
+      Priority: ${task.priority}
+      Status: ${task.status}${answersSection}`,
     },
-  ]);
+      ]);
 
-  try {
-    const parsed = parseJSON<{ subtasks: string[] }>(raw);
-    if (Array.isArray(parsed.subtasks)) return parsed.subtasks;
-  } catch {
-    // fall through to throw below
-  }
+      try {
+        const parsed = parseJSON<{ subtasks: string[] }>(raw);
+        if (Array.isArray(parsed.subtasks)) return parsed.subtasks;
+      } catch {
+        // TODO: fall through to throw below
+      }
 
   throw new Error('Failed to parse subtasks from LLM response');
 }
 
-/**
- * Multi-step decomposition agent:
- *   1. Assess clarity — if the task is too vague, return clarifying questions
- *   2. Generate structured subtasks (with optional clarification answers)
- */
 export async function runDecomposeAgent(
   task: Task,
   answers?: string[],

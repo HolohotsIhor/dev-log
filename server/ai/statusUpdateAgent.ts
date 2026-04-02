@@ -16,23 +16,23 @@ export async function runStatusUpdateAgent(
       role: 'system',
       content: `You are a helpful engineering assistant that writes async status updates for a dev team.
 
-Write a short Slack-style status update based on the task details provided.
+      Write a short Slack-style status update based on the task details provided.
 
-Rules:
-- 2–4 sentences max
-- Match the tone to the task status: celebratory if done, matter-of-fact if in-progress, planning-oriented if todo
-- Mention what's done, what's in progress, and blockers if any (infer from subtask statuses)
-- Write in first person ("I", "we")
-- No markdown, no bullet points — plain text only`,
+      Rules:
+      - 2–4 sentences max
+      - Match the tone to the task status: celebratory if done, matter-of-fact if in-progress, planning-oriented if todo
+      - Mention what's done, what's in progress, and blockers if any (infer from subtask statuses)
+      - Write in first person ("I", "we")
+      - No markdown, no bullet points — plain text only`,
     },
     {
       role: 'user',
       content: `STATUS_UPDATE
 
-Task: "${task.title}"
-Description: "${task.description || '(no description)'}"
-Status: ${task.status}
-Priority: ${task.priority}${subtasksSection}`,
+      Task: "${task.title}"
+      Description: "${task.description || '(no description)'}"
+      Status: ${task.status}
+      Priority: ${task.priority}${subtasksSection}`,
     },
   ]);
 
